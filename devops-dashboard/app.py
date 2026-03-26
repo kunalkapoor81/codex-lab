@@ -47,48 +47,23 @@ def generate_sample_data(hours: int = 48) -> pd.DataFrame:
 st.markdown(
     """
     <style>
-    :root {
-        --bg-start: #0b1220;
-        --bg-mid: #111827;
-        --bg-end: #172554;
-        --text-primary: #f8fafc;
-        --text-secondary: #cbd5e1;
-        --card-bg: rgba(15, 23, 42, 0.78);
-        --card-border: rgba(148, 163, 184, 0.35);
-    }
     .stApp {
-        background: linear-gradient(125deg, var(--bg-start) 0%, var(--bg-mid) 45%, var(--bg-end) 100%);
-        color: var(--text-primary);
+        background: linear-gradient(120deg, #0f172a 0%, #111827 40%, #1e1b4b 100%);
+        color: #e5e7eb;
     }
     .block-container {
-        padding-top: 1.1rem;
+        padding-top: 1.2rem;
         max-width: 1400px;
     }
-    p, li, .stCaption, label, .st-emotion-cache-10trblm, .st-emotion-cache-16idsys {
-        color: var(--text-secondary) !important;
-    }
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.96));
-        border-right: 1px solid rgba(148, 163, 184, 0.25);
-    }
-    [data-testid="stSidebar"] * {
-        color: #e2e8f0 !important;
-    }
     div[data-testid="stMetric"] {
-        background: var(--card-bg);
-        border: 1px solid var(--card-border);
+        background: rgba(17, 24, 39, 0.6);
+        border: 1px solid rgba(148, 163, 184, 0.2);
         border-radius: 16px;
-        padding: 12px;
-        box-shadow: 0 10px 24px rgba(2, 6, 23, 0.35);
-        backdrop-filter: blur(10px);
+        padding: 10px;
+        backdrop-filter: blur(8px);
     }
     h1, h2, h3 {
-        color: var(--text-primary) !important;
-        letter-spacing: 0.2px;
-    }
-    .stAlert {
-        border-radius: 14px;
-        border: 1px solid rgba(148, 163, 184, 0.35);
+        color: #f8fafc !important;
     }
     </style>
     """,
@@ -177,8 +152,8 @@ with left:
     fig.update_layout(
         title="Release Health & Performance Trend",
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(15,23,42,0.72)",
-        font=dict(color="#e2e8f0"),
+        plot_bgcolor="rgba(17,24,39,0.5)",
+        font=dict(color="#e5e7eb"),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         margin=dict(l=20, r=20, t=50, b=20),
     )
@@ -195,13 +170,13 @@ with right:
         x="service",
         y="change_failure_rate",
         color="change_failure_rate",
-        color_continuous_scale=["#22d3ee", "#3b82f6", "#6366f1", "#a855f7"],
+        color_continuous_scale="Reds",
         title="Change Failure by Service",
     )
     bar.update_layout(
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(15,23,42,0.72)",
-        font=dict(color="#e2e8f0"),
+        plot_bgcolor="rgba(17,24,39,0.5)",
+        font=dict(color="#e5e7eb"),
         margin=dict(l=20, r=20, t=50, b=20),
     )
     st.plotly_chart(bar, use_container_width=True)
