@@ -68,3 +68,22 @@ Upload a CSV from the sidebar with these required columns:
 - "You get an **at-a-glance executive view** and **drill-down by service**."
 - "Teams can **self-serve filters and data uploads** without engineering help."
 - "This MVP is ready to evolve into role-based, multi-tenant, and real-time integrations (GitHub Actions/Jenkins/Datadog/Prometheus)."
+
+## 6) Merge conflict sanity check
+
+If you run into a merge conflict while collaborating, validate the working tree is clean before running the app:
+
+```bash
+git status --short
+python - <<'PY'
+from pathlib import Path
+markers = ("<<<" + "<<<<", "===" + "====", ">>>" + ">>>>")
+for p in Path(".").rglob("*"):
+    if p.is_file() and ".git" not in p.parts:
+        text = p.read_text(errors="ignore")
+        if any(m in text for m in markers):
+            print(p)
+PY
+```
+
+`git status` should be clean, and the marker scan should print no source files with conflict markers.

@@ -47,23 +47,74 @@ def generate_sample_data(hours: int = 48) -> pd.DataFrame:
 st.markdown(
     """
     <style>
+    :root {
+        --bg-start: #0b1220;
+        --bg-mid: #111827;
+        --bg-end: #172554;
+        --text-primary: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --card-bg: rgba(15, 23, 42, 0.78);
+        --card-border: rgba(148, 163, 184, 0.35);
+    }
     .stApp {
-        background: linear-gradient(120deg, #0f172a 0%, #111827 40%, #1e1b4b 100%);
-        color: #e5e7eb;
+        background: linear-gradient(125deg, var(--bg-start) 0%, var(--bg-mid) 45%, var(--bg-end) 100%);
+        color: var(--text-primary);
     }
     .block-container {
-        padding-top: 1.2rem;
+        padding-top: 1.1rem;
+        padding-bottom: 1.4rem;
         max-width: 1400px;
     }
+    p, li, .stCaption, label, .st-emotion-cache-10trblm, .st-emotion-cache-16idsys {
+        color: var(--text-secondary) !important;
+    }
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.96));
+        border-right: 1px solid rgba(148, 163, 184, 0.25);
+    }
+    [data-testid="stSidebar"] * {
+        color: #e2e8f0 !important;
+    }
     div[data-testid="stMetric"] {
-        background: rgba(17, 24, 39, 0.6);
-        border: 1px solid rgba(148, 163, 184, 0.2);
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
         border-radius: 16px;
-        padding: 10px;
-        backdrop-filter: blur(8px);
+        padding: 12px;
+        box-shadow: 0 10px 24px rgba(2, 6, 23, 0.35);
+        backdrop-filter: blur(10px);
+    }
+    .panel {
+        background: rgba(15, 23, 42, 0.74);
+        border: 1px solid rgba(148, 163, 184, 0.28);
+        border-radius: 18px;
+        padding: 14px 14px 8px 14px;
+        box-shadow: 0 10px 28px rgba(2, 6, 23, 0.34);
+        margin-bottom: 14px;
+    }
+    .panel-title {
+        color: #f8fafc;
+        margin-bottom: 2px;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+    }
+    .panel-subtitle {
+        color: #93c5fd;
+        font-size: 0.88rem;
+        margin-bottom: 8px;
+    }
+    div[data-testid="stPlotlyChart"], div[data-testid="stDataFrame"] {
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        border-radius: 14px;
+        padding: 6px;
+        background: rgba(15, 23, 42, 0.55);
     }
     h1, h2, h3 {
-        color: #f8fafc !important;
+        color: var(--text-primary) !important;
+        letter-spacing: 0.2px;
+    }
+    .stAlert {
+        border-radius: 14px;
+        border: 1px solid rgba(148, 163, 184, 0.35);
     }
     </style>
     """,
@@ -122,6 +173,9 @@ kpi_4.metric("Change Failure", f"{latest['change_failure_rate'].iloc[0]:.1f}%")
 left, right = st.columns([1.6, 1])
 
 with left:
+    st.markdown('<div class="panel">', unsafe_allow_html=True)
+    st.markdown('<div class="panel-title">Release Health & Performance</div>', unsafe_allow_html=True)
+    st.markdown('<div class="panel-subtitle">Track reliability and response behavior over time.</div>', unsafe_allow_html=True)
     trend = (
         filtered.groupby("timestamp", as_index=False)[
             ["deployment_success_rate", "latency_ms", "cpu_percent"]
@@ -150,16 +204,20 @@ with left:
         )
     )
     fig.update_layout(
-        title="Release Health & Performance Trend",
+        title="",
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(17,24,39,0.5)",
-        font=dict(color="#e5e7eb"),
+        plot_bgcolor="rgba(15,23,42,0.65)",
+        font=dict(color="#e2e8f0"),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         margin=dict(l=20, r=20, t=50, b=20),
     )
     st.plotly_chart(fig, use_container_width=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
 with right:
+    st.markdown('<div class="panel">', unsafe_allow_html=True)
+    st.markdown('<div class="panel-title">Service Risk Snapshot</div>', unsafe_allow_html=True)
+    st.markdown('<div class="panel-subtitle">Identify services with elevated change-failure rates.</div>', unsafe_allow_html=True)
     failure_by_service = (
         filtered.groupby("service", as_index=False)["change_failure_rate"].mean().sort_values(
             "change_failure_rate", ascending=False
@@ -170,18 +228,21 @@ with right:
         x="service",
         y="change_failure_rate",
         color="change_failure_rate",
-        color_continuous_scale="Reds",
-        title="Change Failure by Service",
+        color_continuous_scale=["#22d3ee", "#3b82f6", "#6366f1", "#a855f7"],
+        title="",
     )
     bar.update_layout(
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(17,24,39,0.5)",
-        font=dict(color="#e5e7eb"),
+        plot_bgcolor="rgba(15,23,42,0.65)",
+        font=dict(color="#e2e8f0"),
         margin=dict(l=20, r=20, t=50, b=20),
     )
     st.plotly_chart(bar, use_container_width=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
-st.subheader("📋 Live Ops Feed")
+st.markdown('<div class="panel">', unsafe_allow_html=True)
+st.markdown('<div class="panel-title">📋 Live Ops Feed</div>', unsafe_allow_html=True)
+st.markdown('<div class="panel-subtitle">Recent service updates and deployment health data.</div>', unsafe_allow_html=True)
 feed = filtered.sort_values("timestamp", ascending=False).head(12)
 st.dataframe(
     feed[[
@@ -198,6 +259,7 @@ st.dataframe(
     use_container_width=True,
     hide_index=True,
 )
+st.markdown("</div>", unsafe_allow_html=True)
 
 st.info(
     "Tip: Upload your pipeline/export CSV with the same columns to instantly customize this dashboard for your client demo."
